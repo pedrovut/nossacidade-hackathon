@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from nossacidade.models import Categoria, Reclamacao
 
 # Create your views here.
@@ -16,3 +16,7 @@ class ReclamacaoView(ListView):
     context_object_name = "reclamacao"
     paginate_by = 10
 
+class ReclamacaoDetailView(DetailView):
+    model = Categoria
+    template_name = "nossacidade/reclamacao_detail.html"
+    context_object_name = "reclamacao"
