@@ -12,10 +12,9 @@ class ReclamacaoForm(forms.ModelForm):
     class Meta:
         model = Reclamacao
         fields = [
-            "autor", "categoria",
+            "categoria",
             "descricao", "imagem",
             "endereco", "latitude",
-            "longitude", "data_relato",
-            "upvotes", "status",
+            "longitude",
         ]
 

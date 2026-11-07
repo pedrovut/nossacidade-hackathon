@@ -6,8 +6,8 @@ from nossacidade.models import Categoria, Reclamacao
 
 class CategoriaAdmin(admin.ModelAdmin):
     list_display = ("nome", "gravidade", "urgencia")
-    search_fields = ("nome")
-
+    search_fields = ("nome",)
+    
 class ReclamacaoAdmin(admin.ModelAdmin):
     list_display = (
         "autor", "categoria",
