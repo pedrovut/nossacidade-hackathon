@@ -1,4 +1,4 @@
 django
 django-jazzmin==3.0.1
-dillow
+pillow
 python-decouple
