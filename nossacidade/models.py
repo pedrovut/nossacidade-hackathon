@@ -15,6 +15,9 @@ class Categoria(models.Model):
 
     class Meta:
         ordering = ['id']
+        verbose_name = "Categoria"
+        verbose_name_plural = "Categorias"
+
 
 class Reclamacao(models.Model):
     STATUS_CHOICES = [
@@ -57,3 +60,8 @@ class Reclamacao(models.Model):
         
         prioridade = (base * fator_votos) + fator_tempo
         return round(prioridade, 2)
+
+    class Meta:
+        ordering = ['id']
+        verbose_name = "Reclamação"
+        verbose_name_plural = "Reclamações"
