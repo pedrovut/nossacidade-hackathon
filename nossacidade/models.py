@@ -55,7 +55,7 @@ class Reclamacao(models.Model):
             
         base = self.categoria.gravidade * self.categoria.urgencia
         fator_votos = 1 + math.log10(self.upvotes + 1)
-        dias_aberto = (timezone.now() - self.data_criacao).days
+        dias_aberto = (timezone.now() - self.data_relato).days
         fator_tempo = dias_aberto * 0.5
         
         prioridade = (base * fator_votos) + fator_tempo
