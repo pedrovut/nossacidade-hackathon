@@ -46,15 +46,15 @@ class Reclamacao(models.Model):
 
     @property
     def score_prioridade(self):
-        """
-        Calcula a prioridade dinamicamente baseada em:
-        GUT + Log(Votos) + Tempo de espera.
-        """
         if not self.categoria:
             return 0
             
         base = self.categoria.gravidade * self.categoria.urgencia
-        fator_votos = 1 + math.log10(self.upvotes + 1)
+        
+        # max(0, upvotes) previne números negativos que quebrariam o math.log10
+        fator_votos = 1 + math.log10(max(0, self.upvotes) + 1)
+        
+        # Corrigido: self.data_relato (era self.data_criacao)
         dias_aberto = (timezone.now() - self.data_relato).days
         fator_tempo = dias_aberto * 0.5
         
