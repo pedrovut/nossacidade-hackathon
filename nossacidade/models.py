@@ -27,8 +27,11 @@ class Reclamacao(models.Model):
         ('RESOLVIDO', 'Resolvido'),
     ]
 
+
     autor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT, verbose_name="Categoria")
+
+    titulo = models.CharField(verbose_name="Título do Problema", max_length=100, blank=False, default="Sem Título")
 
     descricao = models.TextField(verbose_name="Descrição", blank=False)
     imagem = models.ImageField(verbose_name="Foto do Problema", upload_to='relatos/', blank=True, null=True)

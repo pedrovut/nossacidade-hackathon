@@ -1,0 +1,10 @@
+{% extends "nossacidade/base.html" %}
+{% block conteudo %}
+<section class="lista lista-pagina">
+  {% for r in reclamacao %}{% include "nossacidade/_card.html" %}{% empty %}<p class="vazio">Nenhum relato até agora.</p>{% endfor %}
+  {% if is_paginated %}<p class="paginacao">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Anterior</a>{% endif %}
+    <span>{{ page_obj.number }} / {{ paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Próxima</a>{% endif %}</p>{% endif %}
+</section>
+{% endblock %}

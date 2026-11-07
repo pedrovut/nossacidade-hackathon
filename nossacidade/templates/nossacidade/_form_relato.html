@@ -1,0 +1,9 @@
+<form method="post" action="{% if form.instance.pk %}{% url 'nossacidade:reclamacao_update' form.instance.pk %}{% else %}{% url 'nossacidade:reclamacao_create' %}{% endif %}" enctype="multipart/form-data" class="form-relato">
+  {% csrf_token %}
+  {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+  {% for field in form.visible_fields %}
+    <label class="campo campo-{{ field.name }}"><span>{{ field.label }}</span>{{ field }}
+      {% for e in field.errors %}<em class="erro">{{ e }}</em>{% endfor %}</label>
+  {% endfor %}
+  <button class="btn-verde btn-enviar">Salvar</button>
+</form>

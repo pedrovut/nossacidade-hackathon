@@ -1,18 +1,18 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
-    <h2>Entrar</h2>
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Entrar</button>
-    </form>
-
-    <p>Ainda não tem conta? <a href="/contas/cadastro">Cadastre-se</a></p>
-</body>
-</html>
+{% extends "nossacidade/base.html" %}{% load static %}
+{% block title %}Entrar · Nossa Cidade{% endblock %}
+{% block bodyclass %}auth{% endblock %}
+{% block corpo %}
+<main class="auth-box">
+  <img class="auth-logo" src="{% static 'nossacidade/img/logo.png' %}" alt="">
+  <h1>Nossa Cidade</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<p class="erro">Usuário ou senha incorretos.</p>{% endif %}
+    <input name="username" placeholder="Nome" autocomplete="username" required value="{{ form.username.value|default:'' }}">
+    <input name="password" type="password" placeholder="Senha" autocomplete="current-password" required>
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    <button class="btn-verde">Entrar</button>
+  </form>
+  <p class="auth-troca">Não possui uma conta? <a href="{% url 'accounts:register' %}">Cadastrar</a></p>
+</main>
+{% endblock %}

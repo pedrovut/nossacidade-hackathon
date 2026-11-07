@@ -1,0 +1,18 @@
+{% extends "nossacidade/base.html" %}{% load nc_tags %}
+{% block title %}Meu perfil · Nossa Cidade{% endblock %}
+{% block conteudo %}
+<section class="perfil">
+  <div class="perfil-topo">
+    <span class="avatar grande">{{ user|iniciais }}</span>
+    <div>
+      <h1>{{ user|nome_autor }}</h1>
+      <small>@{{ user.username }} · {{ reclamacoes|length }} relato{{ reclamacoes|length|pluralize }}</small>
+    </div>
+    <a class="btn-verde btn-novo" href="{% url 'nossacidade:reclamacao_create' %}">+ Novo Relato</a>
+  </div>
+  <div class="lista lista-pagina">
+    {% for r in reclamacoes %}{% include "nossacidade/_card.html" %}
+    {% empty %}<p class="vazio">Você ainda não fez nenhum relato.</p>{% endfor %}
+  </div>
+</section>
+{% endblock %}

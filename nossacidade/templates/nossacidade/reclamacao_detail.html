@@ -1,0 +1,71 @@
+{% extends "nossacidade/base.html" %}{% load static nc_tags %}
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">{% endblock %}
+{% block title %}{{ reclamacao.categoria.nome }} · Nossa Cidade{% endblock %}
+{% block conteudo %}
+{% with r=reclamacao %}
+<article class="detalhe">
+  {% if r.latitude is not None and r.longitude is not None %}<div id="mapa" class="mapa-detalhe"></div>{% endif %}
+  <div class="autor-linha">
+    <span class="avatar grande">{{ r.autor|iniciais }}</span>
+    <div>
+      <strong>{{ r.autor|nome_autor }}</strong>
+      <small>Há {{ r.data_relato|timesince }}</small>
+    </div>
+  </div>
+  <div class="card-detalhe {{ r|nivel }}">
+    <div class="detalhe-corpo">
+      <div class="tags"><span class="tag">{{ r.categoria.nome }}</span><span class="tag">{{ r.get_status_display
+          }}</span></div>
+      <small class="card-end">{{ r.endereco }}</small>
+      <p>{{ r.descricao|linebreaksbr }}</p>
+    </div>
+    <div class="detalhe-lado">
+      {% if r.imagem %}<img src="{{ r.imagem.url }}" alt="Foto do problema"
+        style="border-radius: 8px; width: 100%; object-fit: cover;">{% endif %}
+
+      <div class="botoes-emergencia" style="display: flex; flex-direction: column; gap: 8px; margin: 12px 0;">
+        <a href="tel:190"
+          style="background-color: #4A5568; color: #fff; padding: 6px 12px; text-decoration: none; border-radius: 4px; text-align: center; font-size: 0.85em; font-weight: bold;">Polícia
+          - 190</a>
+        <a href="tel:192"
+          style="background-color: #E53E3E; color: #fff; padding: 6px 12px; text-decoration: none; border-radius: 4px; text-align: center; font-size: 0.85em; font-weight: bold;">SAMU
+          - 192</a>
+        <a href="tel:193"
+          style="background-color: #C53030; color: #fff; padding: 6px 12px; text-decoration: none; border-radius: 4px; text-align: center; font-size: 0.85em; font-weight: bold;">Bombeiros
+          - 193</a>
+      </div>
+
+      <span class="pilula">Votos · {{ r.upvotes }}</span>
+      <span class="pilula">Prioridade · {{ r.score_prioridade }}</span>
+    </div>
+  </div>
+  {% if user == r.autor or user.is_superuser %}
+  <p class="acoes-dono">
+    <a href="{% url 'nossacidade:reclamacao_update' r.pk %}">Editar</a>
+    <a href="{% url 'nossacidade:reclamacao_delete' r.pk %}">Excluir</a>
+  </p>{% endif %}
+</article>
+{% if r.latitude is not None and r.longitude is not None %}
+{{ r.latitude|json_script:"lat" }}{{ r.longitude|json_script:"lng" }}{% endif %}
+{% endwith %}
+{% endblock %}
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+  (function () {
+    var el = document.getElementById('mapa'); if (!el) return;
+    var p = [JSON.parse(document.getElementById('lat').textContent), JSON.parse(document.getElementById('lng').textContent)];
+    var m = L.map(el).setView(p, 16);
+
+    // CORREÇÃO: Usando a URL gratuita do OpenStreetMap
+    L.tileLayer('https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key=cb1_54ax_1_28b1d8dbcbee0c65790edb7a', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap © CARTO'
+    }).addTo(map);
+    // Lembre-se: em reclamacao_create.html e no script interno do home.js, o final é .addTo(formMap);
+
+    L.circleMarker(p, { radius: 10, color: '#fff', weight: 1, fillColor: '#f2452e', fillOpacity: .9 }).addTo(m);
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "nossacidade/base.html" %}
+{% block title %}Editar relato · Nossa Cidade{% endblock %}
+{% block conteudo %}
+<section class="pagina-form">
+  <form method="post" enctype="multipart/form-data" class="form-relato">
+    {% csrf_token %}
+    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+    {% for field in form.visible_fields %}
+      <label class="campo campo-{{ field.name }}"><span>{{ field.label }}</span>{{ field }}
+        {% for e in field.errors %}<em class="erro">{{ e }}</em>{% endfor %}</label>
+    {% endfor %}
+    <button class="btn-verde btn-enviar">Salvar</button>
+  </form>
+</section>
+{% endblock %}

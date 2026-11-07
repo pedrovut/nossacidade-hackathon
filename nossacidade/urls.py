@@ -1,6 +1,7 @@
 from django.urls import path
 from nossacidade.views import (
     InicioView,
+    PerfilView,
 
     ReclamacaoView,
     ReclamacaoDetailView,
@@ -13,6 +14,7 @@ app_name = "nossacidade"
 
 urlpatterns = [
     path('', InicioView.as_view(), name="inicio"),
+    path('perfil/', PerfilView.as_view(), name="perfil"),
 
     path("relatos/", ReclamacaoView.as_view(), name="reclamacao_list"),
     path("relatos/<int:pk>/", ReclamacaoDetailView.as_view(),name="reclamacao_detail"),

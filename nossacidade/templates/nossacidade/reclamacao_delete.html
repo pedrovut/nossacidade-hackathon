@@ -1,0 +1,12 @@
+{% extends "nossacidade/base.html" %}
+{% block title %}Excluir relato · Nossa Cidade{% endblock %}
+{% block conteudo %}
+<section class="pagina-form confirma">
+  <p>Excluir o relato de <strong>{{ reclamacao.categoria.nome }}</strong> em {{ reclamacao.endereco }}? Essa ação não pode ser desfeita.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn-verde btn-perigo">Excluir</button>
+    <a href="{% url 'nossacidade:reclamacao_detail' reclamacao.pk %}">Cancelar</a>
+  </form>
+</section>
+{% endblock %}

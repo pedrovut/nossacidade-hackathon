@@ -1,18 +1,19 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Cadastro</title>
-</head>
-<body>
-    <h2>Criar Conta</h2>
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Cadastrar</button>
-    </form>
-
-    <p>Já possui uma conta? <a href="/contas/login">Entrar</a></p>
-</body>
-</html>
+{% extends "nossacidade/base.html" %}{% load static %}
+{% block title %}Cadastro · Nossa Cidade{% endblock %}
+{% block bodyclass %}auth{% endblock %}
+{% block corpo %}
+<main class="auth-box">
+  <img class="auth-logo" src="{% static 'nossacidade/img/logo.png' %}" alt="">
+  <h1>Nossa Cidade</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for campo in form %}{% for e in campo.errors %}<p class="erro">{{ e }}</p>{% endfor %}{% endfor %}
+    <input name="username" placeholder="Usuário" autocomplete="username" required value="{{ form.username.value|default:'' }}">
+    <input name="full_name" placeholder="Nome Completo" autocomplete="name" required value="{{ form.full_name.value|default:'' }}">
+    <input name="password1" type="password" placeholder="Senha" autocomplete="new-password" required>
+    <input name="password2" type="password" placeholder="Conf. Senha" autocomplete="new-password" required>
+    <button class="btn-verde">Entrar</button>
+  </form>
+  <p class="auth-troca">Já possui uma conta? <a href="{% url 'accounts:login' %}">Login</a></p>
+</main>
+{% endblock %}

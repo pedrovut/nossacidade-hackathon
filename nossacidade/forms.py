@@ -13,6 +13,7 @@ class ReclamacaoForm(forms.ModelForm):
         model = Reclamacao
         fields = [
             "categoria",
+            "titulo",
             "descricao", "imagem",
             "endereco", "latitude",
             "longitude",

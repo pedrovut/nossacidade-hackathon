@@ -1,0 +1,42 @@
+{% load static nc_tags %}
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Nossa Cidade{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'nossacidade/css/nossacidade.css' %}">
+  {% block head %}{% endblock %}
+</head>
+
+<body class="{% block bodyclass %}app{% endblock %}">
+  {% block corpo %}
+  <header class="topbar">
+    <a class="marca" href="{% url 'nossacidade:inicio' %}">
+      <img src="{% static 'nossacidade/img/logo.png' %}" alt="" width="28" height="28">
+      <span>NOSSA CIDADE</span>
+    </a>
+    {% if user.is_authenticated %}
+    <div class="sessao">
+      <a class="sessao-perfil" href="{% url 'nossacidade:perfil' %}" title="Meu perfil">
+        <span class="sessao-nome">{{ user|nome_autor }}</span>
+        <span class="avatar" aria-hidden="true">{{ user|iniciais }}</span>
+      </a>
+      <form method="post" action="{% url 'accounts:logout' %}">
+        {% csrf_token %}
+        <button class="btn-sair">Sair</button>
+      </form>
+    </div>
+    {% else %}
+    <a class="link-entrar" href="{% url 'accounts:login' %}">Entrar</a>
+    {% endif %}
+  </header>
+  <main class="pagina">{% block conteudo %}{% endblock %}</main>
+  {% endblock %}
+  {% block scripts %}{% endblock %}
+</body>
+
+</html>

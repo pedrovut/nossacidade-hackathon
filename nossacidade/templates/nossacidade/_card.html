@@ -1,0 +1,29 @@
+{% load nc_tags %}
+<a class="card {{ r|nivel }}" href="{% url 'nossacidade:reclamacao_detail' r.pk %}">
+  
+  {% if r.imagem %}
+    <!-- Se tiver imagem, mostra a miniatura (como no Figma) -->
+    <img src="{{ r.imagem.url }}" class="avatar" style="object-fit: cover; border-radius: 4px;" alt="Foto">
+  {% else %}
+    <!-- Se não tiver, mantém as iniciais do autor -->
+    <span class="avatar">{{ r.autor|iniciais }}</span>
+  {% endif %}
+
+  <div class="card-corpo">
+    <!-- Aqui entra o Título do problema em destaque -->
+    <strong class="card-autor">{{ r.titulo }}</strong>
+    
+    <div class="tags">
+      <span class="tag">{{ r.categoria.nome }}</span>
+      <span class="tag">{{ r.get_status_display }}</span>
+    </div>
+    
+    
+    <!-- Filtro timesince para mostrar "Há X dias" igual ao Figma -->
+    <small class="card-end">Há {{ r.data_relato|timesince }} atrás · {{ r.endereco }}</small>
+    
+    <p>{{ r.descricao|truncatechars:110 }}</p>
+  </div>
+  
+  <span class="card-votos" title="Votos">▲ {{ r.upvotes }}</span>
+</a>

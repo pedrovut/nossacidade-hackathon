@@ -1,0 +1,87 @@
+{% extends "nossacidade/base.html" %}
+
+{% block head %}
+<!-- Carrega o CSS do Mapa -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+{% endblock %}
+
+{% block title %}Novo relato · Nossa Cidade{% endblock %}
+
+{% block conteudo %}
+<section class="pagina-form">
+    {% include "nossacidade/_form_relato.html" %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<!-- Carrega o JS do Mapa -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const latInput = document.querySelector('input[name="latitude"]');
+        const lngInput = document.querySelector('input[name="longitude"]');
+        const endInput = document.querySelector('input[name="endereco"]');
+
+        if (latInput && lngInput) {
+            latInput.closest('.campo').style.display = 'none';
+            lngInput.closest('.campo').style.display = 'none';
+        }
+
+        const mapDiv = document.createElement('div');
+        mapDiv.id = 'mapa-picker';
+        mapDiv.style.height = '250px';
+        mapDiv.style.marginBottom = '20px';
+        mapDiv.style.borderRadius = '8px';
+        mapDiv.style.zIndex = '1';
+
+        endInput.closest('.campo').before(mapDiv);
+
+        let map = L.map('mapa-picker').setView([-20.4697, -54.6201], 13);
+
+        // CORREÇÃO: URL do CARTO com o parâmetro api_key
+        L.tileLayer('https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key=cb1_54ax_1_28b1d8dbcbee0c65790edb7a', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap © CARTO'
+        }).addTo(map);
+        // Lembre-se: em reclamacao_create.html e no script interno do home.js, o final é .addTo(formMap);
+
+        let marker = L.marker([-20.4697, -54.6201], { draggable: true }).addTo(map);
+
+        function atualizarCampos(lat, lng) {
+            latInput.value = lat;
+            lngInput.value = lng;
+
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.address) {
+                        let rua = data.address.road || "Endereço desconhecido";
+                        let bairro = data.address.suburb || data.address.neighbourhood || "";
+                        endInput.value = bairro ? `${rua}, ${bairro}` : rua;
+                    }
+                })
+                .catch(err => console.log("Erro ao buscar endereço:", err));
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (pos) {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                map.setView([lat, lng], 16);
+                marker.setLatLng([lat, lng]);
+                atualizarCampos(lat, lng);
+            });
+        }
+
+        marker.on('dragend', function (e) {
+            const pos = marker.getLatLng();
+            atualizarCampos(pos.lat, pos.lng);
+        });
+
+        map.on('click', function (e) {
+            marker.setLatLng(e.latlng);
+            atualizarCampos(e.latlng.lat, e.latlng.lng);
+        });
+    });
+</script>
+{% endblock %}
